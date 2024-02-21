@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <!--bootstrap css-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+    <!--jquery script-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        @media screen and (max-width: 799px) {
+            #user {
+                padding-top: 250px;
+            }
+
+            #content {
+                height: 20%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- LOGIN MODULE -->
+    <div class="login">
+        <div class="wrap">
+            <!-- SLIDER -->
+            <div class="content" id="content">
+                <!-- SLIDESHOW -->
+                <div id="slideshow">
+                    <div class="one">
+                        <h2><span id="school">School Zones</span></h2>
+                    </div>
+                </div>
+            </div>
+            <!-- LOGIN FORM -->
+            <div class="user" id="user">
+                <div class="form-wrap">
+                    <!-- TABS -->
+                    <div class="tabs">
+                        <h3 class="login-tab"><a class="log-in active" href="#login-tab-content"><span>Login<span></a>
+                        </h3>
+                        <h3 class="signup-tab"><a class="sign-up" href="#signup-tab-content"><span>Sign Up</span></a>
+                        </h3>
+                    </div>
+                    <!-- TABS CONTENT -->
+                    <div class="tabs-content">
+                        <!-- TABS CONTENT LOGIN -->
+                        <div id="login-tab-content" class="active">
+                            <form class="login-form" action="check" method="post">
+                                <input type="text" class="input" id="user_login" name="user_login" autocomplete="off"
+                                    placeholder="Email or Username">
+                                <input type="password" class="input" id="user_pass" name="user_pass" autocomplete="off"
+                                    placeholder="Password">
+
+                                <input type="submit" class="button" value="Login">
+                            </form>
+                        </div>
+                        <!-- TABS CONTENT SIGNUP -->
+                        <div id="signup-tab-content">
+                            <form class="signup-form" action="signUp" method="post">
+                                <input type="text" class="input" id="user_name" name="user_name" autocomplete="off"
+                                    placeholder="Username">
+                                <input type="password" class="input" id="user_pass" name="user_pass" autocomplete="off"
+                                    placeholder="Password">
+                                <input type="email" class="input" id="user_email" name="user_email" autocomplete="off"
+                                    placeholder="Email">
+
+                                <input type="text" class="input" id="user_number" name="user_number" autocomplete="off"
+                                    placeholder="Number">
+                                <input type="submit" class="button" value="Sign Up">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <footer class="page-footer font-small blue">
+
+                    <!-- Copyright -->
+                    <div class="footer-copyright text-center py-3" style="color: white;">Capstone designt-불법주정차시스템
+                    </div>
+                     <!-- 
+                   <p style="text-align: center;color: white;">열하나-최상민,서동우</p>
+                   Copyright -->
+
+                </footer>
+                <!-- Footer -->
+            </div>
+
+        </div>
+    </div>
+    <script>/* LOGIN - MAIN.JS - dp 2017 */
+
+        // LOGIN TABS
+        $(function () {
+            var tab = $('.tabs h3 a');
+            tab.on('click', function (event) {
+                event.preventDefault();
+                tab.removeClass('active');
+                $(this).addClass('active');
+                tab_content = $(this).attr('href');
+                $('div[id$="tab-content"]').removeClass('active');
+                $(tab_content).addClass('active');
+            });
+        });
+
+        // SLIDESHOW
+        $(function () {
+            $('#slideshow > div:gt(0)').hide();
+            setInterval(function () {
+                $('#slideshow > div:first')
+                    .fadeOut(1000)
+                    .next()
+                    .fadeIn(1000)
+                    .end()
+                    .appendTo('#slideshow');
+            }, 3850);
+        });
+
+        // CUSTOM JQUERY FUNCTION FOR SWAPPING CLASSES
+        (function ($) {
+            'use strict';
+            $.fn.swapClass = function (remove, add) {
+                this.removeClass(remove).addClass(add);
+                return this;
+            };
+        }(jQuery));
+
+        // SHOW/HIDE PANEL ROUTINE (needs better methods)
+        // I'll optimize when time permits.
+        $(function () {
+            $('.agree,.forgot, #toggle-terms, .log-in, .sign-up').on('click', function (event) {
+                event.preventDefault();
+                var terms = $('.terms'),
+                    recovery = $('.recovery'),
+                    close = $('#toggle-terms'),
+                    arrow = $('.tabs-content .fa');
+                if ($(this).hasClass('agree') || $(this).hasClass('log-in') || ($(this).is('#toggle-terms')) && terms.hasClass('open')) {
+                    if (terms.hasClass('open')) {
+                        terms.swapClass('open', 'closed');
+                        close.swapClass('open', 'closed');
+                        arrow.swapClass('active', 'inactive');
+                    } else {
+                        if ($(this).hasClass('log-in')) {
+                            return;
+                        }
+                        terms.swapClass('closed', 'open').scrollTop(0);
+                        close.swapClass('closed', 'open');
+                        arrow.swapClass('inactive', 'active');
+                    }
+                }
+                else if ($(this).hasClass('forgot') || $(this).hasClass('sign-up') || $(this).is('#toggle-terms')) {
+                    if (recovery.hasClass('open')) {
+                        recovery.swapClass('open', 'closed');
+                        close.swapClass('open', 'closed');
+                        arrow.swapClass('active', 'inactive');
+                    } else {
+                        if ($(this).hasClass('sign-up')) {
+                            return;
+                        }
+                        recovery.swapClass('closed', 'open');
+                        close.swapClass('closed', 'open');
+                        arrow.swapClass('inactive', 'active');
+                    }
+                }
+            });
+        });
+
+        // DISPLAY MSSG
+        $(function () {
+            $('.recovery .button').on('click', function (event) {
+                event.preventDefault();
+                $('.recovery .mssg').addClass('animate');
+                setTimeout(function () {
+                    $('.recovery').swapClass('open', 'closed');
+                    $('#toggle-terms').swapClass('open', 'closed');
+                    $('.tabs-content .fa').swapClass('active', 'inactive');
+                    $('.recovery .mssg').removeClass('animate');
+                }, 2500);
+            });
+        });
+
+        // DISABLE SUBMIT FOR DEMO
+        $(function () {
+            $('.button').on('click', function (event) {
+                $(this).stop();
+                event.preventDefault();
+                return false;
+            });
+        });
+//# sourceURL=pen.js
+    </script>
+
+
+    <script
+        src='//production-assets.codepen.io/assets/common/stopExecutionOnTimeout-b2a7b3fe212eaa732349046d8416e00a9dec26eb7fd347590fbced3ab38af52e.js'></script>
+    <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js'></script>
+
+    <!--bootstrap script-->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

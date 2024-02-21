@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style1.css' />
+    <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+        crossorigin="anonymous" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker3.min.css">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <style>
+        @media screen and (max-width: 799px) {
+            #sub {
+                width: 100%;
+                margin: 25px;
+            }
+        }
+
+        label {
+            padding-top: 5px;
+        }
+    </style>
+</head>
+
+<body>
+    <!DOCTYPE html>
+    <html>
+
+    <body class="sb-nav-fixed">
+        <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+            <a class="navbar-brand">사용자 페이지</a><button class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle"
+                href="#"><i class="fas fa-bars"></i></button>
+            <!-- Navbar Search-->
+        </nav>
+        <div id="layoutSidenav">
+            <div id="layoutSidenav_nav">
+                <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+                    <div class="sb-sidenav-menu">
+                        <div class="nav">
+                            <a class="nav-link" href="/">
+                                로그인 페이지<div class="sb-nav-link-icon" style="padding-left: 15px;"><i
+                                        class="fas fa-sign-in-alt"></i></div>
+                            </a>
+                            <div class="sb-sidenav-menu-heading">신고</div>
+                            <a class="nav-link active" href="/call">
+                                <div class="sb-nav-link-icon"><i class="fas fa-car"></i></div>
+                                불법주정차 신고
+                            </a>
+                            <a class="nav-link" href="/report_check">
+                                <div class="sb-nav-link-icon"><i class="fas fa-car"></i></div>
+                                신고 내역 확인
+                            </a>
+                            <div class="sb-sidenav-menu-heading">어린이보호구역</div>
+                            <a class="nav-link" href="/user">
+                                <div class="sb-nav-link-icon"><i class="fas fa-car"></i></div>
+                                어린이보호구역 확인
+                            </a>
+                        </div>
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <div class="container">
+            <h1 style="text-align: center;margin-bottom: 50px;">불법주정차 신고</h1>
+            <hr style="border: 1px solid black;">
+            <div class="row">
+                <div id="sub" class="co1-5" style="border: 1px solid black;padding: 10px; margin-left: 20px;">
+
+                    <!-- Vertical -->
+                    <div class="form-group">
+                        <form class="report_form" action="#">
+                            <label>Username</label>
+                            <input type="text"  name="username" class="form-control"
+                                placeholder="Username" value="<%= name %>" readonly>
+                            <label>PhoneNumber</label>
+                            <input type="text" name="phonenumber" class="form-control"
+                                placeholder="PhoneNumber" value="<%= number %>" readonly>
+                            <label>Date</label>
+                            <input type="text" id="datePicker" name="date" class="form-control">
+                            <label>CarNumber</label>
+                            <input type="text" name="carnumber" class="form-control" id="CarNumber"
+                                placeholder="CarNumber">
+                            <label>ImageUpload</label>
+                            <input type="file" name="image" id="image" class="form-control">
+                            <br>
+                            <input type="button" class="btn btn-info" value="report" onclick="Submit();">
+                        </form>
+                    </div>
+
+                </div>
+                <div class="col-7">
+                    <img id="blah" width="100%" height="100%" style="border: 1px solid black;padding: 10px;">
+                </div>
+            </div>
+        </div>
+
+        <script src="https://code.jquery.com/jquery-3.5.1.js"
+            integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+            crossorigin="anonymous"></script>
+        <script src="/javascripts/script.js"></script>
+        <script>
+            function Submit(){
+                var username = $("input[name='username']").val()
+                var number = $("input[name='phonenumber']").val()
+                var date = $("#datePicker").val()
+                var carnumber = $("input[name='carnumber']").val()
+                var fileInput = document.getElementById("image");
+                var file = fileInput.files[0];
+                var formData = new FormData();
+                formData.append("username",username)
+                formData.append("phonenumber",number)
+                formData.append("date",date)
+                formData.append("carnumber",carnumber)
+                formData.append("image", file);
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function (e) {
+                    if (xhr.readyState === 4) {
+                        if (xhr.status === 200) {
+                            if(xhr.responseText == "success"){
+                                window.alert("성공적으로 신고되었습니다. 관리자 검토 후 신고될 예정입니다.")
+                                location.href = "/call"
+                            }
+                        } else {
+                            console.error(xhr.statusText);
+                        }
+                    }
+                };
+                xhr.open("POST", "call/user_report", true);
+                xhr.send(formData);
+            }
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+                    reader.onload = function (e) {
+                        $('#blah').attr('src', e.target.result)
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }
+            }
+            window.onload = function () {
+                var now = new Date(Date.now());
+                console.log(now)
+                $('#datePicker').datepicker({
+                    changeMonth: true,
+                    changeYear: true,
+                    dayNames: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+                    dayNamesMin: ['월', '화', '수', '목', '금', '토', '일'],
+                    monthNamesShort: ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10',
+                        '11', '12'
+                    ],
+                    monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월',
+                        '10월', '11월', '12월'
+                    ],
+                    dateFormat: "yy/mm/dd",
+                });
+                $("#datePicker").datepicker( "setDate", new Date());
+                $("#image").on({
+                    change: function (event, sel, data) {
+
+                        readURL(document.getElementById("image"))
+                        var fileInput = document.getElementById("image");
+                        var file = fileInput.files[0];
+                        var formData = new FormData();
+                        formData.append("image", file);
+                        var xhr = new XMLHttpRequest();
+                        xhr.onload = function (e) {
+                            if (xhr.readyState === 4) {
+                                if (xhr.status === 200) {
+                                    console.log(xhr.responseText);
+                                    $("#CarNumber").val(xhr.responseText)
+                                } else {
+                                    console.error(xhr.statusText);
+                                }
+                            }
+                        };
+                        xhr.open("POST", "/Car", true);
+                        xhr.send(formData);
+                    }
+                })
+            }
+        </script>
+    </body>
+
+    </html>
+</body>
+
+</html>

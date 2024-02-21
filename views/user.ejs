@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <link rel='stylesheet' href='/stylesheets/style1.css' />
+  <link href="https://cdn.datatables.net/1.10.20/css/dataTables.bootstrap4.min.css" rel="stylesheet"
+    crossorigin="anonymous" />
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/js/all.min.js"
+    crossorigin="anonymous"></script>
+</head>
+
+<body>
+  <!DOCTYPE html>
+  <html>
+  <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+
+  <body class="sb-nav-fixed">
+    <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
+      <a class="navbar-brand">사용자 페이지</a><button
+        class="btn btn-link btn-sm order-1 order-lg-0" id="sidebarToggle" href="#"><i class="fas fa-bars"></i></button>
+      <!-- Navbar Search-->
+    </nav>
+    <div id="layoutSidenav">
+      <div id="layoutSidenav_nav">
+        <nav class="sb-sidenav accordion sb-sidenav-dark" id="sidenavAccordion">
+          <div class="sb-sidenav-menu">
+            <div class="nav">
+              <a class="nav-link" href="/">
+                로그인 페이지<div class="sb-nav-link-icon" style="padding-left: 15px;"><i class="fas fa-sign-in-alt"></i></div>
+              </a>
+              <div class="sb-sidenav-menu-heading">신고</div>
+              <a class="nav-link" href="/call">
+                <div class="sb-nav-link-icon"><i class="fas fa-car"></i></div>
+                불법주정차 신고
+              </a>
+              <div class="sb-sidenav-menu-heading">어린이보호구역</div>
+              <a class="nav-link active" href="/user">
+                <div class="sb-nav-link-icon"><i class="fas fa-car"></i></div>
+                어린이보호구역 확인
+              </a>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </div>
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="container">
+      <h1 style="text-align: center;margin-bottom: 50px;">전라북도 스쿨존 위치</h1>
+      <div id="map" style="width:100%;height:500px"></div>
+    </div>
+    <hr style="border: 1px solid black;">
+
+    
+    <script>
+      function myMap() {
+        var amsterdam = new google.maps.LatLng(35.945621, 126.682464);
+
+        var mapCanvas = document.getElementById("map");
+        var mapOptions = { center: amsterdam, zoom: 15 };
+        var map = new google.maps.Map(mapCanvas, mapOptions);
+
+        $.ajax({
+          url: "data.json",
+          success: function (data) {
+            console.log(data)
+            $.each(data, function (i, v) {
+              var d = new google.maps.LatLng(v["lat"], v["lon"])
+              var myCity = new google.maps.Circle({
+                center: d,
+                radius: 100,
+                strokeColor: "#000000",
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: "#00FF00",
+                fillOpacity: 0.4
+              });
+
+              var contentString = '<div id="content">' +
+                '<div id="siteNotice">' +
+                '</div>' +
+                '<h1 id="firstHeading" class="firstHeading">' + v["info"] + '</h1>' +
+                '</div>';
+
+              var infowindow = new google.maps.InfoWindow({
+                content: contentString
+              });
+
+              var marker = new google.maps.Marker({
+                position: d,
+                map: map,
+                title: v["info"]
+              });
+
+              marker.addListener('click', function () {
+                infowindow.open(map, marker);
+              });
+              myCity.setMap(map);
+            })
+          }
+        })
+      }
+    </script>
+
+    <script
+      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBCXJsqsGWFG6ORpnho84uMWlOSe9SdB5k&callback=myMap"></script>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"></script>
+    <script src="/javascripts/script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js" crossorigin="anonymous"></script>
+    <script src="assets/demo/chart-area-demo.js"></script>
+    <script src="assets/demo/chart-bar-demo.js"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.datatables.net/1.10.20/js/dataTables.bootstrap4.min.js" crossorigin="anonymous"></script>
+    <script src="assets/demo/datatables-demo.js"></script>
+
+  </body>
+
+  </html>
+</body>
+
+</html>
